@@ -1,7 +1,7 @@
 <template>
   <div class="video">
     <h1>{{ video }}</h1>
-    <iframe :src="video_id" allowfullscreen="allowfullscreen" type="text/html" height="576" frameborder="0" width="1024">{{video}}</iframe>
+    <iframe :src="video_id" allowfullscreen="allowfullscreen" type="text/html" height="480" frameborder="0" width="854">{{video}}</iframe>
   </div>
 </template>
 
@@ -10,7 +10,7 @@ export default {
   name: 'Latest',
   data () {
     return {
-      video: null,
+      video: 'Loading',
       video_id: null
     }
   },
