@@ -17,13 +17,23 @@
     </header>
     <router-view />
     <div class="list">
-      <h3 style="font-weight:lighter;">Recent Video</h3>
+      <h3 style="font-weight:lighter;">Recent Videos</h3>
+      <button v-if="!more" id="btn-more" v-on:click="more=true">&#x25BE; Load All &#x25BE;</button>
+      <button v-if="more" id="btn-more" v-on:click="more=false">&#x25B4; Collapse &#x25B4;</button>
       <ul>
         <li v-for="video in videos" :key="video.youtube_id">
           <router-link :to="'/video' + video.path.replace('videos/','')" :style="video.small"></router-link>
         </li>
       </ul>
-      <h3 style="font-weight:lighter;">&#x25BE; Load More &#x25BE;</h3>
+      <transition name="fade" tag="div">
+      <div v-if="more" id="more">
+        <ul>
+        <li v-for="video in all" :key="video.youtube_id">
+          <router-link :to="'/video' + video.path.replace('videos/','')" :style="video.small"></router-link>
+        </li>
+      </ul>
+      </div>
+    </transition>
   </div>
   </div>
 </template>
@@ -34,7 +44,9 @@ export default {
   data () {
     return {
       videos: {},
-      loading: true
+      loading: true,
+      all: {},
+      more: false
     }
   },
   created () {
@@ -43,12 +55,12 @@ export default {
   methods: {
     getallvids () {
       getvids(data => {
-        var list = JSON.parse(data)
-        for (var i = 0; i <= 6; i++) {
-          this.videos[i] = list[i]
+        this.all = JSON.parse(data)
+        for (var i = 0; i <= 5; i++) {
+          this.videos[i] = this.all[i]
         }
         this.loading = false
-        console.log(this.videos)
+        this.all = this.all.splice(5)
       })
     }
   }
@@ -70,6 +82,14 @@ function getvids (callback) {
   position:absolute;
   max-width:10vw;
   max-height: 10vh;
+}
+#btn-more {
+  font-weight: lighter;
+  border: none;
+  background-color: #FF002A;
+  color: white;
+  font-size: 120%;
+  font-family: 'Oswald';
 }
 #social {
   top:10vh; left:0;
@@ -95,11 +115,12 @@ body {
   padding:0;margin:0;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   flex-wrap: wrap;
 }
 .list li, .list li a {
   display: block;
+  margin:0.5vh;
 }
 #app {
   font-family: 'Oswald', sans-serif;
