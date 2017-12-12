@@ -56,9 +56,7 @@ export default {
     getallvids () {
       getvids(data => {
         this.all = JSON.parse(data)
-        for (var i = 0; i <= 5; i++) {
-          this.videos[i] = this.all[i]
-        }
+        this.videos = this.all.splice(0, 6)
         this.loading = false
         this.all = this.all.splice(5)
       })
